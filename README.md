@@ -158,6 +158,14 @@ npm install
 docker compose up -d
 ```
 
+For projects using a specific language version (Ruby, Python, etc.), install it via mise in the runtime script. mise automatically picks up `.ruby-version`, `.python-version`, `.node-version`, and `.tool-versions` files:
+
+```bash
+# your-project/.agent-vm.runtime.sh
+mise install
+bundle install
+```
+
 ### MCP servers
 
 The base VM comes with [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp) pre-configured for Claude, giving the agent headless browser access.
@@ -201,6 +209,7 @@ Each VM is fully isolated — agents must authenticate independently inside thei
 |----------|----------|
 | Core | git, curl, wget, jq, build-essential, unzip, zip |
 | Python | python3, pip, venv |
+| Version manager | [mise](https://mise.jdx.dev/) (Ruby, Python, Node, etc.) |
 | Node.js | Node.js 24 LTS (via NodeSource) |
 | Search | ripgrep, fd-find |
 | Utilities | htop, GitHub CLI (gh) |

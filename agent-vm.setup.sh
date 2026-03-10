@@ -23,10 +23,17 @@ sudo apt-get install -y \
   ripgrep fd-find htop \
   unzip zip \
   ca-certificates \
-  iptables
+  iptables \
+  libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev
 
 # Set zsh as default shell
 sudo chsh -s /usr/bin/zsh "$(whoami)"
+
+# Install mise (polyglot version manager for Ruby, Python, Node, etc.)
+echo "Installing mise..."
+curl https://mise.run | sh
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshenv
 
 # Install Docker from official repo (includes docker compose)
 echo "Installing Docker..."
