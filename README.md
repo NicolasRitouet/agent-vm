@@ -141,11 +141,46 @@ pip install pandas numpy
 
 ### Per-user runtime: `~/.agent-vm/runtime.sh`
 
-Create this file to run commands inside every VM on each start. Runs before the per-project runtime script:
+Create this file to run commands inside every VM on each start. It runs **before** the per-project `.agent-vm.runtime.sh` script.
+
+Use it for anything that should be available in all your VMs: SSH keys, git config, GitHub CLI auth, Claude Code skills, MCP servers, etc.
+
+**Getting started:**
 
 ```bash
-# ~/.agent-vm/runtime.sh
-export MY_API_KEY="..."
+cp runtime.example.sh ~/.agent-vm/runtime.sh
+# Edit with your own values
+```
+
+See [`runtime.example.sh`](runtime.example.sh) for a fully commented template covering:
+- SSH key injection for GitHub (base64-encoded private key)
+- Git identity and SSH-forced remotes (`url.insteadOf`)
+- GitHub CLI authentication (`gh auth login --with-token`)
+- Claude Code skills installation (global and per-project)
+- MCP server registration (`claude mcp add --scope user`)
+- Status line configuration in `~/.claude/settings.json`
+
+**Encoding your SSH key:**
+
+```bash
+cat ~/.ssh/id_ed25519 | base64
+```
+
+Paste the output into your `runtime.sh` — the script decodes it at boot and sets up `~/.ssh` with proper permissions.
+
+**Global vs per-project runtime:**
+
+| File | Scope | Runs when |
+|------|-------|-----------|
+| `~/.agent-vm/runtime.sh` | All VMs | Every VM start, first |
+| `.agent-vm.runtime.sh` | Current project only | Every VM start, after global |
+
+**Important:** Always launch `agent-vm` from a path without spaces. macOS iCloud paths contain spaces (`~/Library/Mobile Documents/...`), which can break mounts. Create a symlink instead:
+
+```bash
+ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs/Dev ~/Dev
+cd ~/Dev/your-project
+agent-vm claude
 ```
 
 ### Per-project: `.agent-vm.runtime.sh`
