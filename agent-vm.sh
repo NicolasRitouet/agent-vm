@@ -329,7 +329,7 @@ EOF
 
 _agent_vm_setup() {
   local disk=10
-  local memory=2
+  local memory=3
   local cpus=1
 
   while [[ $# -gt 0 ]]; do
